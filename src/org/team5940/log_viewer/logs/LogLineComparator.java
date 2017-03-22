@@ -1,4 +1,4 @@
-package logReader;
+package org.team5940.log_viewer.logs;
 
 import java.util.Comparator;
 
