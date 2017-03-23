@@ -120,7 +120,6 @@ public class Window {
 	    //    
 	    if (chooser.showOpenDialog((new JFrame()).getContentPane()) == JFileChooser.APPROVE_OPTION) { 
 	    	//TODO
-//	    	System.out.println("getCurrentDirectory(): " +  chooser.getCurrentDirectory());
 	    	System.out.println("getSelectedFile() : " +  chooser.getSelectedFile());
 	    } else {
 	    	//Example logs
@@ -272,6 +271,7 @@ public class Window {
 			public void actionPerformed(ActionEvent arg0) {
 				for(JCheckBox cBox : options.values())
 					cBox.setSelected(true);
+				updateLogText();
 			}
 		});
 		panel.add(enableAll);
@@ -281,6 +281,7 @@ public class Window {
 			public void actionPerformed(ActionEvent arg0) {
 				for(JCheckBox cBox : options.values())
 					cBox.setSelected(false);
+				updateLogText();
 			}
 		});
 		panel.add(disableAll);
