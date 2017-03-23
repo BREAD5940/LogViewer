@@ -63,5 +63,48 @@ public class LogReaderOpen {
 			}
 		}
 	}
+	public ArrayList<LogLine> returnLogLines(File folder) {		
+
+		String line;
+		try {
+			ArrayList<LogLine> logs = new ArrayList<LogLine>();
+			ArrayList<File> logFiles = new ArrayList<File>();
+			findLogFiles(logFiles,folder);
+			for(File logFile: logFiles) {
+				FileReader fileReader = new FileReader(logFile);
+				BufferedReader bufferedReader = new BufferedReader(fileReader);
+				line = bufferedReader.readLine();
+				while(line != null) {
+					ArrayList<String> out = new ArrayList<String>();
+					int opens = 0;
+					for(int i = 0; i < line.length(); i++) {
+						char c = line.charAt(i);
+						if(c == '<') opens++;
+						else if(c == '>') opens--;
+						if(opens == 0 && i > 0) {
+							out.add(line.substring(1, i));
+							line = line.substring(i+1);
+							i = -1;
+							
+						}
+					}
+					LogLine logLine = new LogLine(out);
+					logs.add(logLine);
+					line = bufferedReader.readLine();
+				}
+				bufferedReader.close();
+			}
+			logs.sort(new LogLineComparator());
+			return logs;
+		
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new ArrayList<LogLine>();
+	}
 		
 }
