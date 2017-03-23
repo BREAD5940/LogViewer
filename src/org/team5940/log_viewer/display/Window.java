@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Random;
@@ -19,6 +20,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
 import org.team5940.log_viewer.logs.LogLine;
+import org.team5940.log_viewer.logs.LogReader;
 
 public class Window {
 
@@ -113,7 +115,7 @@ public class Window {
 		//Update logs
 		//TODO
 		JFileChooser chooser = new JFileChooser(); 
-	    chooser.setCurrentDirectory(new java.io.File("."));
+	    chooser.setCurrentDirectory(new File("ftp://roborio-5940-frc.local/media/sda1/"));
 	    chooser.setDialogTitle("Select Log Files Directory");
 	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	    chooser.setAcceptAllFileFilterUsed(false);
@@ -121,7 +123,11 @@ public class Window {
 	    if (chooser.showOpenDialog((new JFrame()).getContentPane()) == JFileChooser.APPROVE_OPTION) { 
 	    	//TODO
 	    	System.out.println("getSelectedFile() : " +  chooser.getSelectedFile());
-	    } else {
+	    	this.logLines = LogReader.returnLogLines(chooser.getSelectedFile());
+	    	
+			//Update UI for contents of new logs
+			updateOptions();
+	    } else {//TODO add check for existing logs and settings
 	    	//Example logs
 			this.logLines = new ArrayList<>();
 			ArrayList<String> exampleLog;
@@ -180,10 +186,11 @@ public class Window {
 			exampleLog.add("Set Piston State" + (new Random()).nextInt());
 			exampleLog.add((new Random()).nextInt() + " - int");
 			this.logLines.add(new LogLine(exampleLog));
+
+			//Update UI for contents of new logs
+			updateOptions();
 	    }
-	    
-		//Update UI for contents of new logs
-		updateOptions();
+	
 	}
 	
 	private void updateOptions() {

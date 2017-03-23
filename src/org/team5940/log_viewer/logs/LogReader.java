@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class LogReaderOpen {
+public class LogReader {
 	
 	public static void readFiles() {
 		File folderName = new File("C:\\Users\\Raian\\Documents\\Projects\\logs");
@@ -53,6 +53,7 @@ public class LogReaderOpen {
 			e.printStackTrace();
 		}
 	}
+	
 	public static void findLogFiles(ArrayList<File> logFiles, File folder) {
 		File[] arrayFiles = folder.listFiles();
 		for(File file: arrayFiles) {
@@ -63,7 +64,8 @@ public class LogReaderOpen {
 			}
 		}
 	}
-	public ArrayList<LogLine> returnLogLines(File folder) {		
+	
+	public static ArrayList<LogLine> returnLogLines(File folder) {		
 
 		String line;
 		try {
