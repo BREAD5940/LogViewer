@@ -21,6 +21,7 @@ import javax.swing.JTextArea;
 
 import org.team5940.log_viewer.logs.LogLine;
 import org.team5940.log_viewer.logs.LogReader;
+import javax.swing.JSplitPane;
 
 public class Window {
 
@@ -100,13 +101,23 @@ public class Window {
 		});
 		controls.add(noMessagesButton);
 		
+		JSplitPane mainPane = new JSplitPane();
+		mainPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		frame.getContentPane().add(mainPane, BorderLayout.CENTER);
+		
 		//LOGS
 		JScrollPane centerPane = new JScrollPane();
-		frame.getContentPane().add(centerPane, BorderLayout.CENTER);
+		//frame.getContentPane().add(centerPane, BorderLayout.CENTER);
+		mainPane.setLeftComponent(centerPane);
 		
 		this.logText = new JTextArea();
+		logText.setEditable(false);
 		this.logText.setText("this would be line one - bvgcfdtyuhijkmnb vcfdtyuijkmnbvcfdrtyuijkmn bvcfdtr7yuijknmb vgcfdtr67y8uijnb vgcftryuhjbnvgfyguh\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nthis would be a later line!");
 		centerPane.setViewportView(this.logText);
+		
+		//OPTIONS
+		options = new JTabbedPane(JTabbedPane.TOP);
+		mainPane.setRightComponent(options);
 		
 		readLogs();
 	}
@@ -115,7 +126,7 @@ public class Window {
 		//Update logs
 		//TODO
 		JFileChooser chooser = new JFileChooser(); 
-	    chooser.setCurrentDirectory(new File("ftp://roborio-5940-frc.local/media/sda1/"));
+	    chooser.setCurrentDirectory(new File("/"));
 	    chooser.setDialogTitle("Select Log Files Directory");
 	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	    chooser.setAcceptAllFileFilterUsed(false);
@@ -128,81 +139,81 @@ public class Window {
 			//Update UI for contents of new logs
 			updateOptions();
 	    } else {//TODO add check for existing logs and settings
-	    	//Example logs
-			this.logLines = new ArrayList<>();
-			ArrayList<String> exampleLog;
-			
-			exampleLog = new ArrayList<>();
-			exampleLog.add("121230820");
-			exampleLog.add("thread");
-			exampleLog.add("module");
-			exampleLog.add("Initialized");
-			exampleLog.add("Module");
-			this.logLines.add(new LogLine(exampleLog));
-			
-			exampleLog = new ArrayList<>();
-			exampleLog.add("121230821");
-			exampleLog.add("thread");
-			exampleLog.add("module");
-			exampleLog.add("Initialized");
-			exampleLog.add("AbstractModule");
-			this.logLines.add(new LogLine(exampleLog));
-			
-			exampleLog = new ArrayList<>();
-			exampleLog.add("121230822");
-			exampleLog.add("thread");
-			exampleLog.add("piston");
-			exampleLog.add("Initialized");
-			exampleLog.add("Module");
-			this.logLines.add(new LogLine(exampleLog));
-			
-			exampleLog = new ArrayList<>();
-			exampleLog.add("121230823");
-			exampleLog.add("thread");
-			exampleLog.add("piston");
-			exampleLog.add("Did a thing!");
-			this.logLines.add(new LogLine(exampleLog));
-			
-			exampleLog = new ArrayList<>();
-			exampleLog.add("121230824");
-			exampleLog.add("thread2");
-			exampleLog.add("piston");
-			exampleLog.add("Set Piston State");
-			exampleLog.add("false");
-			this.logLines.add(new LogLine(exampleLog));
-			
-			exampleLog = new ArrayList<>();
-			exampleLog.add("121230825");
-			exampleLog.add("thread2");
-			exampleLog.add("piston");
-			exampleLog.add("Set Piston State");
-			exampleLog.add("true");
-			this.logLines.add(new LogLine(exampleLog));
-			
-			exampleLog = new ArrayList<>();
-			exampleLog.add("121230826");
-			exampleLog.add("thread2");
-			exampleLog.add("piston");
-			exampleLog.add("Set Piston State" + (new Random()).nextInt());
-			exampleLog.add((new Random()).nextInt() + " - int");
-			this.logLines.add(new LogLine(exampleLog));
-
-			//Update UI for contents of new logs
-			updateOptions();
+	    	if(this.logLines == null || this.logLines.size() == 0) {
+		    	//Example logs
+				this.logLines = new ArrayList<>();
+				ArrayList<String> exampleLog;
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("121230820");
+				exampleLog.add("thread");
+				exampleLog.add("module");
+				exampleLog.add("Initialized");
+				exampleLog.add("Module");
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("121230821");
+				exampleLog.add("thread");
+				exampleLog.add("module");
+				exampleLog.add("Initialized");
+				exampleLog.add("AbstractModule");
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("121230822");
+				exampleLog.add("thread");
+				exampleLog.add("piston");
+				exampleLog.add("Initialized");
+				exampleLog.add("Module");
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("121230823");
+				exampleLog.add("thread");
+				exampleLog.add("piston");
+				exampleLog.add("Did a thing!");
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("121230824");
+				exampleLog.add("thread2");
+				exampleLog.add("piston");
+				exampleLog.add("Set Piston State");
+				exampleLog.add("false");
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("121230825");
+				exampleLog.add("thread2");
+				exampleLog.add("piston");
+				exampleLog.add("Set Piston State");
+				exampleLog.add("true");
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("121230826");
+				exampleLog.add("thread2");
+				exampleLog.add("piston");
+				exampleLog.add("Set Piston State" + (new Random()).nextInt());
+				exampleLog.add((new Random()).nextInt() + " - int");
+				this.logLines.add(new LogLine(exampleLog));
+	
+				//Update UI for contents of new logs
+				updateOptions();
+	    	}
 	    }
 	
 	}
 	
 	private void updateOptions() {
 		//REMOVE OLD COMPONENTS
-		if(this.options != null) this.options.removeAll();
-		else options = new JTabbedPane(JTabbedPane.TOP);
+		this.options.removeAll();
 		
 		//OPTIONS
 		updateThreads();//Update the list of threads.
 		updateModuleMessages();//Update the hashtable of modules and their messages.
-		//Options pane
-		frame.getContentPane().add(options, BorderLayout.SOUTH);
+		
 		//Threads tab
 		this.threadChecks = this.createOptionCheckboxes(this.threads);
 		options.addTab("Threads", null, this.createOptionPanel("Threads", this.threadChecks), null);
