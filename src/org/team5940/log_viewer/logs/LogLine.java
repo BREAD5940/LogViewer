@@ -21,7 +21,7 @@ public class LogLine {
 		}
 	}
 	public String getLine() {
-		return '<' + stamp1 + "><" + stamp2 + "><" + stamp3 + ">" + ((stamp4 != null)?("<" + stamp4 + ">"):"");
+		return '<' + stamp1 + "><" + stamp2 + "><" + stamp3 + "><" + stamp4 + '>' + ((stamp5 != null)?("<" + stamp5 + ">"):"");
 	}
 	public long getTime() {
 		return Long.parseLong(stamp1);
