@@ -94,14 +94,14 @@ public class Window {
 		this.logLines.add(new LogLine(exampleLog));
 		
 		exampleLog = new ArrayList<>();
-		exampleLog.add("121230822");
+		exampleLog.add("121230823");
 		exampleLog.add("thread");
 		exampleLog.add("piston");
 		exampleLog.add("Did a thing!");
 		this.logLines.add(new LogLine(exampleLog));
 		
 		exampleLog = new ArrayList<>();
-		exampleLog.add("121230822");
+		exampleLog.add("121230824");
 		exampleLog.add("thread2");
 		exampleLog.add("piston");
 		exampleLog.add("Set Piston State");
@@ -109,7 +109,7 @@ public class Window {
 		this.logLines.add(new LogLine(exampleLog));
 		
 		exampleLog = new ArrayList<>();
-		exampleLog.add("121230822");
+		exampleLog.add("121230825");
 		exampleLog.add("thread2");
 		exampleLog.add("piston");
 		exampleLog.add("Set Piston State");
@@ -117,7 +117,7 @@ public class Window {
 		this.logLines.add(new LogLine(exampleLog));
 		
 		exampleLog = new ArrayList<>();
-		exampleLog.add("121230822");
+		exampleLog.add("121230826");
 		exampleLog.add("thread2");
 		exampleLog.add("piston");
 		exampleLog.add("Set Piston State");
@@ -266,9 +266,6 @@ public class Window {
 			}
 		});
 		panel.add(disableAll);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		panel.add(scrollPane);
 		
 		for(JCheckBox cBox : options.values())
 			panel.add(cBox);//TODO scrollpane not working, test in it's own class
