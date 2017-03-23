@@ -67,53 +67,64 @@ public class Window {
 		//Update logs
 		//TODO
 		this.logLines = new ArrayList<>();
-		ArrayList<String> exampleLog = new ArrayList<>();
+		ArrayList<String> exampleLog;
+		
+		exampleLog = new ArrayList<>();
+		exampleLog.add("121230820");
+		exampleLog.add("thread");
+		exampleLog.add("module");
+		exampleLog.add("Initialized");
+		exampleLog.add("Module");
+		this.logLines.add(new LogLine(exampleLog));
+		
+		exampleLog = new ArrayList<>();
 		exampleLog.add("121230821");
 		exampleLog.add("thread");
 		exampleLog.add("module");
-		exampleLog.add("\"initialized\"");
-		exampleLog.add("Some data!");
+		exampleLog.add("Initialized");
+		exampleLog.add("AbstractModule");
 		this.logLines.add(new LogLine(exampleLog));
 		
 		exampleLog = new ArrayList<>();
-		exampleLog.add("91243966");
-		exampleLog.add("thread2");
-		exampleLog.add("module2");
-		exampleLog.add("\"initialized\"");
-		exampleLog.add("Some data!");
+		exampleLog.add("121230822");
+		exampleLog.add("thread");
+		exampleLog.add("piston");
+		exampleLog.add("Initialized");
+		exampleLog.add("Module");
 		this.logLines.add(new LogLine(exampleLog));
 		
 		exampleLog = new ArrayList<>();
-		exampleLog.add("91243966");
-		exampleLog.add("thread2");
-		exampleLog.add("module2");
-		exampleLog.add("\"initialized2\"");
-		exampleLog.add("Some data!");
+		exampleLog.add("121230822");
+		exampleLog.add("thread");
+		exampleLog.add("piston");
+		exampleLog.add("Did a thing!");
 		this.logLines.add(new LogLine(exampleLog));
 		
 		exampleLog = new ArrayList<>();
-		exampleLog.add("91243966");
+		exampleLog.add("121230822");
 		exampleLog.add("thread2");
-		exampleLog.add("module2");
-		exampleLog.add("Set Motor Speed");
-		exampleLog.add("Some data!");
-		this.logLines.add(new LogLine(exampleLog));
-		
-		exampleLog = new ArrayList<>();
-		exampleLog.add("91243966");
-		exampleLog.add("thread2");
-		exampleLog.add("module2");
+		exampleLog.add("piston");
 		exampleLog.add("Set Piston State");
-		exampleLog.add("Some data!");
+		exampleLog.add("false");
 		this.logLines.add(new LogLine(exampleLog));
 		
 		exampleLog = new ArrayList<>();
-		exampleLog.add("91243966");
+		exampleLog.add("121230822");
 		exampleLog.add("thread2");
-		exampleLog.add("module2");
-		exampleLog.add("\"initialized5\"");
-		exampleLog.add("Some data!");
+		exampleLog.add("piston");
+		exampleLog.add("Set Piston State");
+		exampleLog.add("true");
 		this.logLines.add(new LogLine(exampleLog));
+		
+		exampleLog = new ArrayList<>();
+		exampleLog.add("121230822");
+		exampleLog.add("thread2");
+		exampleLog.add("piston");
+		exampleLog.add("Set Piston State");
+		exampleLog.add("false");
+		this.logLines.add(new LogLine(exampleLog));
+		
+		
 		
 		//Update UI for contents of new logs
 		updateUI();
@@ -131,8 +142,27 @@ public class Window {
 		JButton loadButton = new JButton("Load Logs");
 		controls.add(loadButton);
 		
-		JButton refreshButton = new JButton("Refresh Display");
-		controls.add(refreshButton);
+		JButton allMessagesButton = new JButton("All Messages");
+		allMessagesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				for(Hashtable<String, JCheckBox> module : moduleMessageChecks.values())
+					for(JCheckBox message : module.values())
+						message.setSelected(true);
+				updateLogText();
+			}
+		});
+		controls.add(allMessagesButton);
+		
+		JButton noMessagesButton = new JButton("No Messages");
+		noMessagesButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				for(Hashtable<String, JCheckBox> module : moduleMessageChecks.values())
+					for(JCheckBox message : module.values())
+						message.setSelected(false);
+				updateLogText();
+			}
+		});
+		controls.add(noMessagesButton);
 		
 		//LOGS
 		JScrollPane centerPane = new JScrollPane();
@@ -152,6 +182,7 @@ public class Window {
 		this.threadChecks = this.createOptionCheckboxes(this.threads);
 		options.addTab("Threads", null, this.createOptionPanel("Threads", this.threadChecks), null);
 		//Module tabs
+		this.moduleMessageChecks = new Hashtable<>();
 		for(String module : this.moduleMessages.keySet()) {
 			Hashtable<String, JCheckBox> messageChecks = this.createOptionCheckboxes(this.moduleMessages.get(module));
 			this.moduleMessageChecks.put(module, messageChecks);
@@ -165,11 +196,16 @@ public class Window {
 	//Updates logText based on threadChecks and moduleMessageChecks
 	private void updateLogText() {
 		//TODO
-//		this.logText.setText("");
-//		for(LogLine line : this.logLines) 
-//			//if					 Thread is selected			   and Module message is selected
-//			if(this.threadChecks.get(line.getStamp(1)).isSelected() && this.moduleMessageChecks.get(line.getStamp(2)).get(line.getStamp(3)).isSelected())
-//				this.logText.append(line.getLine() + "\n");
+		this.logText.setText("");
+		for(LogLine line : this.logLines) {
+			String thread = line.getStamp(2);
+			String module = line.getStamp(3);
+			String message = line.getStamp(4);
+			
+			//TODO check if thread and message are selected
+			if(this.threadChecks.get(thread).isSelected() && this.moduleMessageChecks.get(module).get(message).isSelected())
+				this.logText.append(line.getLine() + "\n");
+		}
 	}
 	
 	//Updates threads based on the contents of logLines.
@@ -195,8 +231,16 @@ public class Window {
 	//Creates the checkboxes for options
 	private Hashtable<String, JCheckBox> createOptionCheckboxes(ArrayList<String> options) {
 		Hashtable<String, JCheckBox> out = new Hashtable<>();
-		for(String option : options)
-			out.put(option, new JCheckBox(option));
+		for(String option : options) {
+			JCheckBox check = new JCheckBox(option);
+			check.setSelected(true);
+			check.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					updateLogText();
+				}
+			});
+			out.put(option, check);
+		}
 		return out;
 	}
 	
