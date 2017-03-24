@@ -28,11 +28,9 @@ public class Graph extends JPanel {
 	private ArrayList<Double> data;
 	private final String xLabel;
 	private final String yLabel;
-	private final String title;
 	
-	public Graph(ArrayList<Double> data, String title, String xLabel, String yLabel) {
+	public Graph(ArrayList<Double> data, String xLabel, String yLabel) {
 		this.data = data;
-		this.title = title;
 		this.xLabel = xLabel;
 		this.yLabel = yLabel;
 	}
@@ -70,17 +68,67 @@ public class Graph extends JPanel {
             }
             g2.drawLine(x0, y0, x1, y1);
         }
+		
+		for (int i = 0; i < data.size(); i++) {
+            if (data.size() > 1) {
+                int x0 = i * (getWidth() - padding * 2 - labelPadding) / (data.size() - 1) + padding + labelPadding;
+                int x1 = x0;
+                int y0 = getHeight() - padding - labelPadding;
+                int y1 = y0 - pointWidth;
+                if ((i % ((int) ((data.size() / 20.0)) + 1)) == 0) {
+                    g2.setColor(gridColor);
+                    g2.drawLine(x0, getHeight() - padding - labelPadding - 1 - pointWidth, x1, padding);
+                    g2.setColor(Color.BLACK);
+                    String xLabel = i + "";
+                    FontMetrics metrics = g2.getFontMetrics();
+                    int labelWidth = metrics.stringWidth(xLabel);
+                    g2.drawString(xLabel, x0 - labelWidth / 2, y0 + metrics.getHeight() + 3);
+                }
+                g2.drawLine(x0, y0, x1, y1);
+            }
+        }
+		g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, padding + labelPadding, padding);
+        g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, getWidth() - padding, getHeight() - padding - labelPadding);
 
+        Stroke oldStroke = g2.getStroke();
+        g2.setColor(lineColor);
+        g2.setStroke(GRAPH_STROKE);
+        for (int i = 0; i < graphPoints.size() - 1; i++) {
+            int x1 = graphPoints.get(i).x;
+            int y1 = graphPoints.get(i).y;
+            int x2 = graphPoints.get(i + 1).x;
+            int y2 = graphPoints.get(i + 1).y;
+            g2.drawLine(x1, y1, x2, y2);
+        }
+
+        g2.setStroke(oldStroke);
+        g2.setColor(pointColor);
+        for (int i = 0; i < graphPoints.size(); i++) {
+            int x = graphPoints.get(i).x - pointWidth / 2;
+            int y = graphPoints.get(i).y - pointWidth / 2;
+            int ovalW = pointWidth;
+            int ovalH = pointWidth;
+            g2.fillOval(x, y, ovalW, ovalH);
+        }
 	}
 
-	private int getMax() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getMax() {
+		double max = Double.MIN_VALUE;
+        for (Double num : data) {
+            max= Math.max(max, num);
+        }
+        return max;
 	}
 
-	private int getMin() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getMin() {
+		double min = Double.MAX_VALUE;
+        for (Double num : data) {
+            min = Math.min(min, num);
+        }
+        return min;
+	}
+	public ArrayList<Double> getData() {
+		return data;
 	}
 
 }
