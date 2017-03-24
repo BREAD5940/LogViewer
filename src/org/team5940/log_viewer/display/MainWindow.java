@@ -23,7 +23,7 @@ import org.team5940.log_viewer.logs.LogLine;
 import org.team5940.log_viewer.logs.LogReader;
 import javax.swing.JSplitPane;
 
-public class Window {
+public class MainWindow {
 
 	private JFrame frame;
 	private JTabbedPane options;
@@ -42,7 +42,7 @@ public class Window {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Window window = new Window();
+					MainWindow window = new MainWindow();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +54,7 @@ public class Window {
 	/**
 	 * Create the application.
 	 */
-	public Window() {
+	public MainWindow() {
 		initialize();
 	}
 
@@ -146,6 +146,8 @@ public class Window {
 							System.out.println(d);
 					}
 				}
+				
+				GraphWindow.createWindow(toGraph);
 			}
 		});
 		controls.add(graphButton);
