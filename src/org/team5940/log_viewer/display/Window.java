@@ -33,6 +33,7 @@ public class Window {
 	private Hashtable<String, ArrayList<String>> moduleMessages;
 	private Hashtable<String, JCheckBox> threadChecks;
 	private Hashtable<String, Hashtable<String, JCheckBox>> moduleMessageChecks;
+	private File lastFolder;
 
 	/**
 	 * Launch the application.
@@ -61,7 +62,7 @@ public class Window {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
+		frame = new JFrame("LogViewer");
 		frame.setBounds(100, 100, 640, 480);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -126,18 +127,25 @@ public class Window {
 		//Update logs
 		//TODO
 		JFileChooser chooser = new JFileChooser(); 
-	    chooser.setCurrentDirectory(new File("/"));
+	    if(this.lastFolder == null) {
+	    	File currFolder = new File("/home/deb/robot-media");
+	    	if(!currFolder.isDirectory())
+	    		chooser.setCurrentDirectory(new File("/"));
+	    	else chooser.setCurrentDirectory(currFolder);
+	    }
+	    else chooser.setCurrentDirectory(this.lastFolder);
 	    chooser.setDialogTitle("Select Log Files Directory");
 	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 	    chooser.setAcceptAllFileFilterUsed(false);
 	    //    
 	    if (chooser.showOpenDialog((new JFrame()).getContentPane()) == JFileChooser.APPROVE_OPTION) { 
-	    	//TODO
-	    	System.out.println("getSelectedFile() : " +  chooser.getSelectedFile());
-	    	this.logLines = LogReader.returnLogLines(chooser.getSelectedFile());
+	    	File folder = chooser.getSelectedFile();
+	    	this.logLines = LogReader.returnLogLines(folder);
 	    	
 			//Update UI for contents of new logs
 			updateOptions();
+
+	    	this.lastFolder = folder;
 	    } else {//TODO add check for existing logs and settings
 	    	if(this.logLines == null || this.logLines.size() == 0) {
 		    	//Example logs
