@@ -102,6 +102,54 @@ public class Window {
 		});
 		controls.add(noMessagesButton);
 		
+		JButton graphButton = new JButton("Graph");
+		graphButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("GRAPHING");
+				Hashtable<String, Hashtable<String, ArrayList<Double>>> toGraph = new Hashtable<>();
+				
+				//Construct Hashtable
+				for(LogLine line : logLines) {
+					String thread = line.getStamp(2);
+					String module = line.getStamp(3);
+					String message = line.getStamp(4);
+					String data = line.getStamp(5);
+					
+					//check if thread and message are selected and data is not null
+					if(threadChecks.get(thread).isSelected() && moduleMessageChecks.get(module).get(message).isSelected() && data != null) {
+						try {
+							Double num = Double.parseDouble(data);
+							
+							Hashtable<String, ArrayList<Double>> moduleMessages = toGraph.get(module);
+							if(moduleMessages == null) {
+								moduleMessages = new Hashtable<String, ArrayList<Double>>();
+								toGraph.put(module, moduleMessages);
+							}
+							ArrayList<Double> messageData = moduleMessages.get(message);
+							if(messageData == null) {
+								messageData = new ArrayList<Double>();
+								moduleMessages.put(message, messageData);
+							}
+							
+							messageData.add(num);
+						}catch(Exception e) {}
+					}
+				}
+				
+				for(String module : toGraph.keySet()) {
+					System.out.println("MODULE: " + module);
+					Hashtable<String, ArrayList<Double>> moduleMessages = toGraph.get(module);
+					for(String message : moduleMessages.keySet()) {
+						System.out.println("MESSAGE: " + message);
+						ArrayList<Double> dataPoints = moduleMessages.get(message);
+						for(double d : dataPoints)
+							System.out.println(d);
+					}
+				}
+			}
+		});
+		controls.add(graphButton);
+		
 		JSplitPane mainPane = new JSplitPane();
 		mainPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		frame.getContentPane().add(mainPane, BorderLayout.CENTER);
@@ -128,7 +176,7 @@ public class Window {
 		//TODO
 		JFileChooser chooser = new JFileChooser(); 
 	    if(this.lastFolder == null) {
-	    	File currFolder = new File("/home/deb/robot-media");
+	    	File currFolder = new File("/home/deb/robot-media/sda1");
 	    	if(!currFolder.isDirectory())
 	    		chooser.setCurrentDirectory(new File("/"));
 	    	else chooser.setCurrentDirectory(currFolder);
