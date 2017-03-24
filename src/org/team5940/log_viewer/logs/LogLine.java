@@ -13,7 +13,11 @@ public class LogLine {
 		stamp1 = out.get(0);
 		stamp2 = out.get(1);
 		stamp3 = out.get(2);
-		stamp4 = out.get(3);
+		try {
+			stamp4 = out.get(3);
+		} catch (IndexOutOfBoundsException e) {
+			stamp4 = null;
+		}
 		try {
 			stamp5 = out.get(4);
 		} catch (IndexOutOfBoundsException e) {
