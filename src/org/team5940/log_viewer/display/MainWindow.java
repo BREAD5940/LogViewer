@@ -106,10 +106,11 @@ public class MainWindow {
 		graphButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("GRAPHING");
-				Hashtable<String, Hashtable<String, ArrayList<Double>>> toGraph = new Hashtable<>();
+				Hashtable<String, Hashtable<String, ArrayList<DoublePoint>>> toGraph = new Hashtable<>();
 				
 				//Construct Hashtable
 				for(LogLine line : logLines) {
+					String timestamp = line.getStamp(1);
 					String thread = line.getStamp(2);
 					String module = line.getStamp(3);
 					String message = line.getStamp(4);
@@ -118,32 +119,35 @@ public class MainWindow {
 					//check if thread and message are selected and data is not null
 					if(threadChecks.get(thread).isSelected() && moduleMessageChecks.get(module).get(message).isSelected() && data != null) {
 						try {
-							Double num = Double.parseDouble(data);
+							double num = Double.parseDouble(data);
+							long time = Long.parseLong(timestamp);
 							
-							Hashtable<String, ArrayList<Double>> moduleMessages = toGraph.get(module);
+							Hashtable<String, ArrayList<DoublePoint>> moduleMessages = toGraph.get(module);
 							if(moduleMessages == null) {
-								moduleMessages = new Hashtable<String, ArrayList<Double>>();
+								moduleMessages = new Hashtable<String, ArrayList<DoublePoint>>();
 								toGraph.put(module, moduleMessages);
 							}
-							ArrayList<Double> messageData = moduleMessages.get(message);
+							ArrayList<DoublePoint> messageData = moduleMessages.get(message);
 							if(messageData == null) {
-								messageData = new ArrayList<Double>();
+								messageData = new ArrayList<DoublePoint>();
 								moduleMessages.put(message, messageData);
 							}
 							
-							messageData.add(num);
+							messageData.add(new DoublePoint(time, num));
 						}catch(Exception e) {}
 					}
 				}
 				
 				for(String module : toGraph.keySet()) {
 					System.out.println("MODULE: " + module);
-					Hashtable<String, ArrayList<Double>> moduleMessages = toGraph.get(module);
+					Hashtable<String, ArrayList<DoublePoint>> moduleMessages = toGraph.get(module);
 					for(String message : moduleMessages.keySet()) {
 						System.out.println("MESSAGE: " + message);
-						ArrayList<Double> dataPoints = moduleMessages.get(message);
-						for(double d : dataPoints)
-							System.out.println(d);
+						ArrayList<DoublePoint> dataPoints = moduleMessages.get(message);
+						for(DoublePoint d : dataPoints) {
+							System.out.println("X:" + d.x);
+							System.out.println("Y:" + d.y);
+						}
 					}
 				}
 				

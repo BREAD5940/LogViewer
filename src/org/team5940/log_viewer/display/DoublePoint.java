@@ -5,7 +5,7 @@ public class DoublePoint {
 	public final double x;
 	public final double y;
 	
-	public DoublePoint(int x, int y) {
+	public DoublePoint(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
