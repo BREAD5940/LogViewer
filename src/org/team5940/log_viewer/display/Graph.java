@@ -1,28 +1,26 @@
 package org.team5940.log_viewer.display;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.Stroke;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 public class Graph extends JPanel {
-	private final int padding = 25;
-	private final int labelPadding = 25;
+	private static final long serialVersionUID = 1L;
+	private final int padding = 15;
+	private final int xLabelPadding = 60;
+	private final int yLabelPadding = 15;
 	private final Color lineColor = new Color(44, 102, 230, 180);
 	private final Color pointColor = new Color(100, 100, 100, 100);
 	private final Color gridColor = new Color(150, 150, 150, 200);
 	private final Color gridLabelColor = new Color(75, 75, 75, 255);
 	private final Color borderColor = new Color(75, 75, 75, 255);
-	private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
 	private final int pointWidth = 4;
-	private final int divisionSize = 100;
+	private final int divisionSize = 75;
 	private ArrayList<DoublePoint> data;
 	
 	public Graph(ArrayList<DoublePoint> data) {
@@ -36,12 +34,12 @@ public class Graph extends JPanel {
 		
 		//GET GRAPH BOUNDS
 		//x
-		int xStart = this.padding + this.labelPadding;
+		int xStart = this.padding + this.xLabelPadding;
 		int xEnd = this.getWidth() - this.padding;
 		int xWidth = xEnd - xStart;
 		//y
 		int yStart = this.padding;
-		int yEnd = this.getHeight() - this.padding - this.labelPadding;
+		int yEnd = this.getHeight() - this.padding - this.yLabelPadding;
 		int yHeight = yEnd - yStart;
 		
 		//DRAW GRAPH BORDER
