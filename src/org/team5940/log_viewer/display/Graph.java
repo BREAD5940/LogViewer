@@ -111,11 +111,11 @@ public class Graph extends JPanel {
 	public double getMax() {
 		double check = 0;
 		for(int i = 1; i < data.size(); i++) {
-			check = data.get(i - 1).x;
-			if(check < data.get(i).x) {
-				check = data.get(i).x;
+			check = data.get(i - 1).y;
+			if(check < data.get(i).y) {
+				check = data.get(i).y;
 			} else {
-				check = data.get(i - 1).x;
+				check = data.get(i - 1).y;
 			}
 		}
 		return check;
@@ -124,11 +124,11 @@ public class Graph extends JPanel {
 	public double getMin() {
 		double check = 0;
 		for(int i = 1; i < data.size(); i++) {
-			check = data.get(i - 1).x;
-			if(check > data.get(i).x) {
-				check = data.get(i - 1).x;
+			check = data.get(i - 1).y;
+			if(check > data.get(i).y) {
+				check = data.get(i - 1).y;
 			} else { 
-				check = data.get(i).x;
+				check = data.get(i).y;
 			}
 		}
 		return check;
