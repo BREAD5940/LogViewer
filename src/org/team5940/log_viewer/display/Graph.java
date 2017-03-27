@@ -25,14 +25,10 @@ public class Graph extends JPanel {
 	private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
 	private final int pointWidth = 4;
 	private final int numberYDivisions = 10;
-	private ArrayList<Double> data;
-	private final String xLabel;
-	private final String yLabel;
+	private ArrayList<DoublePoint> data;
 	
-	public Graph(ArrayList<Double> data, String xLabel, String yLabel) {
+	public Graph(ArrayList<DoublePoint> data) {
 		this.data = data;
-		this.xLabel = xLabel;
-		this.yLabel = yLabel;
 	}
 	
 	protected void paintComponent(Graphics g) {
@@ -44,8 +40,8 @@ public class Graph extends JPanel {
 		
 		ArrayList<Point> graphPoints = new ArrayList<>();
 		for (int i = 0; i < data.size(); i++) {
-			int x1 = (int) (i * xScale + padding + labelPadding);
-			int y1 = (int) ((getMax() - data.get(i)) * yScale + padding);
+			int x1 = (int) ((getMaxX() - data.get(i).x )* xScale + padding + labelPadding);
+			int y1 = (int) ((getMax() - data.get(i).y) * yScale + padding);
 			graphPoints.add(new Point(x1, y1));
 		}
 		g2.setColor(Color.WHITE);
@@ -113,22 +109,58 @@ public class Graph extends JPanel {
 	}
 
 	public double getMax() {
-		double max = Double.MIN_VALUE;
-        for (Double num : data) {
-            max= Math.max(max, num);
-        }
-        return max;
+		double check = 0;
+		for(int i = 1; i < data.size(); i++) {
+			check = data.get(i - 1).x;
+			if(check < data.get(i).x) {
+				check = data.get(i).x;
+			} else {
+				check = data.get(i - 1).x;
+			}
+		}
+		return check;
 	}
 
 	public double getMin() {
-		double min = Double.MAX_VALUE;
-        for (Double num : data) {
-            min = Math.min(min, num);
-        }
-        return min;
-	}
-	public ArrayList<Double> getData() {
-		return data;
+		double check = 0;
+		for(int i = 1; i < data.size(); i++) {
+			check = data.get(i - 1).x;
+			if(check > data.get(i).x) {
+				check = data.get(i - 1).x;
+			} else { 
+				check = data.get(i).x;
+			}
+		}
+		return check;
 	}
 	
+	public double getMinX() {
+		double check = 0;
+		for(int i = 1; i < data.size(); i++) {
+			check = data.get(i - 1).x;
+			if(check > data.get(i).x) {
+				check = data.get(i - 1).x;
+			} else {
+				check = data.get(i).x;
+			}
+		}
+		return check;
+	}
+	
+	public double getMaxX() {
+		double check = 0;
+		for(int i = 1; i < data.size(); i++) {
+			check = data.get(i - 1).x;
+			if(check < data.get(i).x) {
+				check = data.get(i).x;
+			} else {
+				check = data.get(i - 1).x;
+			}
+		}
+		return check;
+	}
+	
+	public ArrayList<DoublePoint> getData() {
+		return data;
+	}
 }
