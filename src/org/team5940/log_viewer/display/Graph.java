@@ -35,7 +35,7 @@ public class Graph extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (data.size() - 1);
+        double xScale = ((double) getWidth() - (2 * padding) - labelPadding) / (getMaxX() - getMinX());
         double yScale = ((double) getHeight() - 2 * padding - labelPadding) / (getMax() - getMin());
 		
 		ArrayList<Point> graphPoints = new ArrayList<>();
