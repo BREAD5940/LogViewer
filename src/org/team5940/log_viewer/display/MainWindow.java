@@ -108,6 +108,7 @@ public class MainWindow {
 				System.out.println("GRAPHING");
 				Hashtable<String, Hashtable<String, ArrayList<DoublePoint>>> toGraph = new Hashtable<>();
 				
+				long firstTime = -1;
 				//Construct Hashtable
 				for(LogLine line : logLines) {
 					String timestamp = line.getStamp(1);
@@ -115,6 +116,12 @@ public class MainWindow {
 					String module = line.getStamp(3);
 					String message = line.getStamp(4);
 					String data = line.getStamp(5);
+
+					if(firstTime == -1) {
+						try{
+							firstTime = Long.parseLong(timestamp);
+						}catch(Exception e){e.printStackTrace();}
+					}
 					
 					//check if thread and message are selected and data is not null
 					if(threadChecks.get(thread).isSelected() && moduleMessageChecks.get(module).get(message).isSelected() && data != null) {
@@ -133,7 +140,7 @@ public class MainWindow {
 								moduleMessages.put(message, messageData);
 							}
 							
-							messageData.add(new DoublePoint(time, num));
+							messageData.add(new DoublePoint((time-firstTime)/1000d, num));
 						}catch(Exception e) {}
 					}
 				}
@@ -207,7 +214,7 @@ public class MainWindow {
 				ArrayList<String> exampleLog;
 				
 				exampleLog = new ArrayList<>();
-				exampleLog.add("121230820");
+				exampleLog.add("1000");
 				exampleLog.add("thread");
 				exampleLog.add("module");
 				exampleLog.add("Initialized");
@@ -215,7 +222,7 @@ public class MainWindow {
 				this.logLines.add(new LogLine(exampleLog));
 				
 				exampleLog = new ArrayList<>();
-				exampleLog.add("121230821");
+				exampleLog.add("1500");
 				exampleLog.add("thread");
 				exampleLog.add("module");
 				exampleLog.add("Initialized");
@@ -223,7 +230,7 @@ public class MainWindow {
 				this.logLines.add(new LogLine(exampleLog));
 				
 				exampleLog = new ArrayList<>();
-				exampleLog.add("121230822");
+				exampleLog.add("2000");
 				exampleLog.add("thread");
 				exampleLog.add("piston");
 				exampleLog.add("Initialized");
@@ -231,14 +238,14 @@ public class MainWindow {
 				this.logLines.add(new LogLine(exampleLog));
 				
 				exampleLog = new ArrayList<>();
-				exampleLog.add("121230823");
+				exampleLog.add("2001");
 				exampleLog.add("thread");
 				exampleLog.add("piston");
 				exampleLog.add("Did a thing!");
 				this.logLines.add(new LogLine(exampleLog));
 				
 				exampleLog = new ArrayList<>();
-				exampleLog.add("121230824");
+				exampleLog.add("2500");
 				exampleLog.add("thread2");
 				exampleLog.add("piston");
 				exampleLog.add("Set Piston State");
@@ -246,7 +253,7 @@ public class MainWindow {
 				this.logLines.add(new LogLine(exampleLog));
 				
 				exampleLog = new ArrayList<>();
-				exampleLog.add("121230825");
+				exampleLog.add("2750");
 				exampleLog.add("thread2");
 				exampleLog.add("piston");
 				exampleLog.add("Set Piston State");
@@ -254,11 +261,51 @@ public class MainWindow {
 				this.logLines.add(new LogLine(exampleLog));
 				
 				exampleLog = new ArrayList<>();
-				exampleLog.add("121230826");
+				exampleLog.add("3000");
 				exampleLog.add("thread2");
 				exampleLog.add("piston");
-				exampleLog.add("Set Piston State" + (new Random()).nextInt());
-				exampleLog.add((new Random()).nextInt() + " - int");
+				exampleLog.add("Num");
+				exampleLog.add(String.valueOf((new Random()).nextDouble()));
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("3100");
+				exampleLog.add("thread2");
+				exampleLog.add("piston");
+				exampleLog.add("Num");
+				exampleLog.add(String.valueOf((new Random()).nextDouble()));
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("3300");
+				exampleLog.add("thread2");
+				exampleLog.add("piston");
+				exampleLog.add("Num");
+				exampleLog.add(String.valueOf((new Random()).nextDouble()));
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("3400");
+				exampleLog.add("thread2");
+				exampleLog.add("piston");
+				exampleLog.add("Num");
+				exampleLog.add(String.valueOf((new Random()).nextDouble()));
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("4200");
+				exampleLog.add("thread2");
+				exampleLog.add("piston");
+				exampleLog.add("Num");
+				exampleLog.add(String.valueOf((new Random()).nextDouble()));
+				this.logLines.add(new LogLine(exampleLog));
+				
+				exampleLog = new ArrayList<>();
+				exampleLog.add("4900");
+				exampleLog.add("thread2");
+				exampleLog.add("piston");
+				exampleLog.add("Num");
+				exampleLog.add(String.valueOf((new Random()).nextDouble()));
 				this.logLines.add(new LogLine(exampleLog));
 	
 				//Update UI for contents of new logs

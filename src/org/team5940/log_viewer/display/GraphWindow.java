@@ -13,12 +13,12 @@ import javax.swing.JTabbedPane;
 public class GraphWindow {
 
 	private JDialog dialog;
-	private final Hashtable<String, Hashtable<String, ArrayList<Double>>> toGraph;
+	private final Hashtable<String, Hashtable<String, ArrayList<DoublePoint>>> toGraph;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void createWindow(Hashtable<String, Hashtable<String, ArrayList<Double>>> toGraph) {
+	public static void createWindow(Hashtable<String, Hashtable<String, ArrayList<DoublePoint>>> toGraph) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -34,7 +34,7 @@ public class GraphWindow {
 	/**
 	 * Create the application.
 	 */
-	public GraphWindow(Hashtable<String, Hashtable<String, ArrayList<Double>>> toGraph) {
+	public GraphWindow(Hashtable<String, Hashtable<String, ArrayList<DoublePoint>>> toGraph) {
 		this.toGraph = toGraph;
 		initialize();
 	}
@@ -51,13 +51,13 @@ public class GraphWindow {
 		dialog.getContentPane().add(moduleTabs, BorderLayout.CENTER);
 		
 		for(String moduleString : this.toGraph.keySet()) {
-			Hashtable<String, ArrayList<Double>> modules = this.toGraph.get(moduleString);
+			Hashtable<String, ArrayList<DoublePoint>> modules = this.toGraph.get(moduleString);
 			JTabbedPane messageTabs = new JTabbedPane(JTabbedPane.TOP);
 			moduleTabs.addTab(moduleString, null, messageTabs, null);
 			
 			for(String messageString : modules.keySet()) {
-				ArrayList<Double> data = modules.get(messageString);
-				JPanel graph = new Graph(data, "Timestamps", "Value");
+				ArrayList<DoublePoint> data = modules.get(messageString);
+				JPanel graph = new Graph(data);
 				messageTabs.addTab(messageString, null, graph, null);
 			}
 		}
