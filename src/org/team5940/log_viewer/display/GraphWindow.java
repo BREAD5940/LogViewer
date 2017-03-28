@@ -70,5 +70,20 @@ public class GraphWindow {
 		
 		
 	}
+	public static void createTabs(Hashtable<String, Hashtable<String, ArrayList<DoublePoint>>> toGraph, JTabbedPane moduleTabs) {
+		
+		for(String moduleString : toGraph.keySet()) {
+			Hashtable<String, ArrayList<DoublePoint>> modules = toGraph.get(moduleString);
+			JTabbedPane messageTabs = new JTabbedPane(JTabbedPane.TOP);
+			moduleTabs.addTab(moduleString, null, messageTabs, null);
+			
+			for(String messageString : modules.keySet()) {
+				ArrayList<DoublePoint> data = modules.get(messageString);
+				JPanel graph = new Graph(data);
+				messageTabs.addTab(messageString, null, graph, null);
+			}
+		}
+		
+	}
 
 }

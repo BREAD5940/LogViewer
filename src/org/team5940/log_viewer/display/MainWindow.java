@@ -27,6 +27,7 @@ public class MainWindow {
 
 	private JFrame frame;
 	private JTabbedPane options;
+	private JTabbedPane graph;
 	private JTextArea logText;
 	private ArrayList<LogLine> logLines;
 	private ArrayList<String> threads;
@@ -63,7 +64,7 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame("LogViewer");
-		frame.setBounds(100, 100, 640, 480);
+		frame.setBounds(100, 100, 1280, 720);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -101,76 +102,22 @@ public class MainWindow {
 			}
 		});
 		controls.add(noMessagesButton);
-		
-		JButton graphButton = new JButton("Graph");
-		graphButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("GRAPHING");
-				Hashtable<String, Hashtable<String, ArrayList<DoublePoint>>> toGraph = new Hashtable<>();
-				
-				long firstTime = -1;
-				//Construct Hashtable
-				for(LogLine line : logLines) {
-					String timestamp = line.getStamp(1);
-					String thread = line.getStamp(2);
-					String module = line.getStamp(3);
-					String message = line.getStamp(4);
-					String data = line.getStamp(5);
 
-					if(firstTime == -1) {
-						try{
-							firstTime = Long.parseLong(timestamp);
-						}catch(Exception e){e.printStackTrace();}
-					}
-					
-					//check if thread and message are selected and data is not null
-					if(threadChecks.get(thread).isSelected() && moduleMessageChecks.get(module).get(message).isSelected() && data != null) {
-						try {
-							double num = Double.parseDouble(data);
-							long time = Long.parseLong(timestamp);
-							
-							Hashtable<String, ArrayList<DoublePoint>> moduleMessages = toGraph.get(module);
-							if(moduleMessages == null) {
-								moduleMessages = new Hashtable<String, ArrayList<DoublePoint>>();
-								toGraph.put(module, moduleMessages);
-							}
-							ArrayList<DoublePoint> messageData = moduleMessages.get(message);
-							if(messageData == null) {
-								messageData = new ArrayList<DoublePoint>();
-								moduleMessages.put(message, messageData);
-							}
-							
-							messageData.add(new DoublePoint((time-firstTime)/1000d, num));
-						}catch(Exception e) {}
-					}
-				}
-				
-				for(String module : toGraph.keySet()) {
-					System.out.println("MODULE: " + module);
-					Hashtable<String, ArrayList<DoublePoint>> moduleMessages = toGraph.get(module);
-					for(String message : moduleMessages.keySet()) {
-						System.out.println("MESSAGE: " + message);
-						ArrayList<DoublePoint> dataPoints = moduleMessages.get(message);
-						for(DoublePoint d : dataPoints) {
-							System.out.println("X:" + d.x);
-							System.out.println("Y:" + d.y);
-						}
-					}
-				}
-				
-				GraphWindow.createWindow(toGraph);
-			}
-		});
-		controls.add(graphButton);
-		
 		JSplitPane mainPane = new JSplitPane();
-		mainPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		mainPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		frame.getContentPane().add(mainPane, BorderLayout.CENTER);
+
+		
+		JSplitPane dataPane = new JSplitPane();
+		dataPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		mainPane.setLeftComponent(dataPane);
+//		frame.getContentPane().add(dataPane, BorderLayout.CENTER);
 		
 		//LOGS
 		JScrollPane centerPane = new JScrollPane();
 		//frame.getContentPane().add(centerPane, BorderLayout.CENTER);
-		mainPane.setLeftComponent(centerPane);
+		dataPane.setLeftComponent(centerPane);
+		
 		
 		this.logText = new JTextArea();
 		logText.setEditable(false);
@@ -179,7 +126,10 @@ public class MainWindow {
 		
 		//OPTIONS
 		options = new JTabbedPane(JTabbedPane.TOP);
-		mainPane.setRightComponent(options);
+		dataPane.setRightComponent(options);
+		
+		graph = new JTabbedPane(JTabbedPane.TOP);
+		mainPane.setRightComponent(graph);
 		
 		readLogs();
 	}
@@ -335,6 +285,7 @@ public class MainWindow {
 		}
 
 		updateLogText();//Update the logLines.
+		updateGraph();
 		
 	}
 	
@@ -350,6 +301,63 @@ public class MainWindow {
 			if(this.threadChecks.get(thread).isSelected() && this.moduleMessageChecks.get(module).get(message).isSelected())
 				this.logText.append(line.getLine() + "\n");
 		}
+	}
+	
+	private void updateGraph() {
+		System.out.println("GRAPHING");
+		Hashtable<String, Hashtable<String, ArrayList<DoublePoint>>> toGraph = new Hashtable<>();
+		
+		long firstTime = -1;
+		//Construct Hashtable
+		for(LogLine line : logLines) {
+			String timestamp = line.getStamp(1);
+			String thread = line.getStamp(2);
+			String module = line.getStamp(3);
+			String message = line.getStamp(4);
+			String data = line.getStamp(5);
+
+			if(firstTime == -1) {
+				try{
+					firstTime = Long.parseLong(timestamp);
+				}catch(Exception e){e.printStackTrace();}
+			}
+			
+			//check if thread and message are selected and data is not null
+			if(threadChecks.get(thread).isSelected() && moduleMessageChecks.get(module).get(message).isSelected() && data != null) {
+				try {
+					double num = Double.parseDouble(data);
+					long time = Long.parseLong(timestamp);
+					
+					Hashtable<String, ArrayList<DoublePoint>> moduleMessages = toGraph.get(module);
+					if(moduleMessages == null) {
+						moduleMessages = new Hashtable<String, ArrayList<DoublePoint>>();
+						toGraph.put(module, moduleMessages);
+					}
+					ArrayList<DoublePoint> messageData = moduleMessages.get(message);
+					if(messageData == null) {
+						messageData = new ArrayList<DoublePoint>();
+						moduleMessages.put(message, messageData);
+					}
+					
+					messageData.add(new DoublePoint((time-firstTime)/1000d, num));
+				}catch(Exception e) {}
+			}
+		}
+		
+		for(String module : toGraph.keySet()) {
+			System.out.println("MODULE: " + module);
+			Hashtable<String, ArrayList<DoublePoint>> moduleMessages = toGraph.get(module);
+			for(String message : moduleMessages.keySet()) {
+				System.out.println("MESSAGE: " + message);
+				ArrayList<DoublePoint> dataPoints = moduleMessages.get(message);
+				for(DoublePoint d : dataPoints) {
+					System.out.println("X:" + d.x);
+					System.out.println("Y:" + d.y);
+				}
+			}
+		}
+		graph.removeAll();
+		GraphWindow.createTabs(toGraph,graph);
 	}
 	
 	//Updates threads based on the contents of logLines.
@@ -381,6 +389,7 @@ public class MainWindow {
 			check.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					updateLogText();
+					updateGraph();
 				}
 			});
 			out.put(option, check);
@@ -399,6 +408,7 @@ public class MainWindow {
 				for(JCheckBox cBox : options.values())
 					cBox.setSelected(true);
 				updateLogText();
+				updateGraph();
 			}
 		});
 		panel.add(enableAll);
@@ -409,6 +419,7 @@ public class MainWindow {
 				for(JCheckBox cBox : options.values())
 					cBox.setSelected(false);
 				updateLogText();
+				updateGraph();
 			}
 		});
 		panel.add(disableAll);
